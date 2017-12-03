@@ -23,6 +23,13 @@
         </div>
       </div>
 
+      <!-- 새롭게 추가한 부분 -->
+      <div class="inputOption">
+        <div class="optionBox">
+          <input class="custom" type="text" name="option" placeholder="원하는 단축 URL을 입력(알파벳, 숫자 조합 8글자 이내)" maxlength="8">
+        </div>
+      </div>
+
       <div class="resultWrapper">
         <div class="resultBox">
           <div class="resultContent">
@@ -32,6 +39,10 @@
               <div id="qrcode"></div>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="errorWrapper">
+        <div class="errorBox">
         </div>
       </div>
     </div>
@@ -48,24 +59,38 @@
         if ($(".inputArea").val() == "") {
           return;
         } else if (!$(".inputArea").val().match(/^(https?:\/\/)?([a-z0-9-]+\.)+[a-z0-9]{2,4}(.*)?$/)) {
-          // 잘못된 URL 입력시 경고 - 간단한 정규표현식으로 최소한의 검증. 
+          // 잘못된 URL 입력시 경고 - 간단한 정규표현식으로 최소한의 검증.
           // 좀 더 정확한 검증을 위해서는 더 디테일한 정규표현식 작성 필요
           alert("잘못된 URL입니다!");
           return;
+        } else if (!$('.custom').val().match(/^[a-zA-z0-9]{1,8}$/) && $('.custom').val()!="") {
+          alert("커스텀 URL은 알파벳, 숫자만 입력해주세요!");
+          return;
         }
         var beforeURL = $(".inputArea").val();
+        var custom = $('.custom').val();
         console.log(beforeURL);
         // qrcode.makeCode($(".inputArea").val());
-
+        $(".errorBox").text("");
         axios.post('http://localhost/url', {
-          before: beforeURL
+          before: beforeURL,
+          custom: custom
         })
         .then(function (res) {
           console.log(res);
-          console.log(res.data.before);
-          $(".urlLink").attr("href", "http://localhost/" + res.data.after);
-          $(".urlLink").text("http://localhost/" + res.data.after);
-          qrcode.makeCode("http://localhost/" + res.data.after);
+          console.log(res.data.data.before);
+          console.log(res.data.msg);
+
+          if (res.data.msg != "") {
+            $(".errorBox").text(res.data.msg);
+            return;
+          } else {
+            $(".errorBox").text("");
+          }
+
+          $(".urlLink").attr("href", "http://localhost/" + res.data.data.after);
+          $(".urlLink").text("http://localhost/" + res.data.data.after);
+          qrcode.makeCode("http://localhost/" + res.data.data.after);
         })
         .catch(function (err) {
           console.log(err);

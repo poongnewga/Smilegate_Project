@@ -42,40 +42,55 @@ const URL = sequelize.define('URL', {
 
 
 // before 검증 및 생성
-const createRecord = async (before, after) => {
+const createRecord = async (before, after, custom) => {
   try {
     var url = await URL.findOne({where:{before: before}});
     if (url == null) {
-      var res = await checkAfter(before, after);
+      console.log("Before가 없습니다. 바로 ID 중복 여부를 검사합니다.");
+      var res = await checkAfter(before, after, custom);
       // console.log(res);
       return res;
     } else {
+      console.log("기존 존재하는 Before가 있습니다. After를 그대로 리턴합니다.");
+      if (custom == true) {
+        gMsg = "커스텀이 불가능한 URL입니다."
+      }
       console.log(url);
       return url;
     }
   } catch (err) {
     console.log(err);
+    gMsg = "에러가 발생했습니다. 다시 시도해주세요.";
     return null;
   }
 }
 
-// before가 이미 검증된 경우, id만 중복 여부 검증
-const checkAfter = async (before, after) => {
+// before가 이미 검증된 경우(처음 저장하는 경우), id만 중복 여부 검증
+const checkAfter = async (before, after, custom) => {
   try {
     var temp = await URL.findOne({where:{after: after}});
     if (temp == null) {
+      console.log("중복된 ID가 없습니다. 새로운 레코드를 추가합니다.");
+      gMsg = "";
       var result = await URL.create({before: before, after: after});
       // console.log(result);
+      // console.log("custom 성공!")
       return result;
     } else {
-      checkAfter(before, uid());
+      console.log("중복된 ID가 존재합니다. 다른 ID로 다시 시도합니다.");
+      if (custom == true) {
+        gMsg = "이미 사용중인 커스텀 URL입니다. 무작위로 생성합니다.";
+      }
+      checkAfter(before, uid(), custom);
     }
   } catch (err) {
     console.log(err);
+    gMsg = "에러가 발생했습니다. 다시 시도해주세요.";
     return null;
   }
 }
 
+var gMsg="";
 
 var express = require('express');
 var bodyParser = require("body-parser");
@@ -122,18 +137,29 @@ app.get('/:after', async (req, res, next) => {
 app.post('/url', async (req, res) => {
   console.log(req.body.before);
   var before_url = req.body.before;
+  console.log(req.body.custom);
+
 
   if (!before_url.match(/^[a-zA-Z]+:\/\//)){
     before_url = 'http://' + before_url;
   }
 
   var after_url = uid();
-
-  var status = await createRecord(before_url, after_url);
+  gMsg="";
+  if (req.body.custom != "") {
+    console.log("CUSTOM 있음");
+    var status = await createRecord(before_url, req.body.custom, true);
+  } else {
+    console.log("CUSTOM 없음");
+    gMsg="";
+    var status = await createRecord(before_url, after_url, false);
+  }
 
   if (status) {
-    res.send(status);
+    console.log("최종 메세지 : " + gMsg);
+    res.send({data: status, msg: gMsg});
   } else {
+    console.log("최종 메세지 : " + gMsg);
     res.send({status: 500, msg: "DB Error"});
   }
 });
