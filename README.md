@@ -13,7 +13,7 @@
 - 브라우저에서 shortening URL을 입력하면 원래 URL로 리다이렉트
 - 도메인은 localhost 로 처리(소스코드는 localhost 기반. 실제 구동 확인은 아래의 캡쳐 및 링크를 참조)
 
-AWS 클라우드 서버 배포 완료 : [ http://smile.heeham.com ](http://smile.heeham.com)
+AWS 클라우드 서버 배포 완료 : <a href="http://smile.heeham.com" target="_blank">http://smile.heeham.com</a>
 
 ### 추가한 기능
 - URL 입력시 정상적인 URL 이 아니면 잘못된 URL 이라고 표시(잘못된 URL인 경우 & 등록되지 않은 단축 URL을 입력한 경우)
