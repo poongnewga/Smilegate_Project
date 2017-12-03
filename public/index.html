@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css">
+    <link rel="stylesheet" href="./style.css">
+    <title>URL Shortener</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./qrcode.js"></script>
+  </head>
+  <body>
+    <header>URL 단축 서비스 만들기</header>
+    <div class="mainWrapper">
+      <div class="inputBox">
+        <div class="inputWrapper">
+          <form class="inputForm">
+            <input class="inputArea" type="text" name="urlBox" value="">
+          </form>
+          <div class="inputButton">
+            변환
+          </div>
+        </div>
+      </div>
+
+      <div class="resultWrapper">
+        <div class="resultBox">
+          <div class="resultContent">
+            단축 URL : <a class="urlLink" target="_blank" href="http://www.naver.com"></a>
+            <div class="qrBox">
+              <div class="qrTitle"> QR 코드 </div>
+              <div id="qrcode"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      var qrcode = new QRCode("qrcode");
+
+      $(".inputButton").click(function () {
+        $(".inputForm").submit();
+      });
+
+      $(".inputForm").submit(function (e) {
+        e.preventDefault();
+
+        if ($(".inputArea").val() == "") {
+          return;
+        } else if (!$(".inputArea").val().match(/^(https?:\/\/)?([a-z0-9-]+\.)+[a-z0-9]{2,4}(.*)?$/)) {
+          // 잘못된 URL 입력시 경고 - 간단한 정규표현식으로 최소한의 검증. 
+          // 좀 더 정확한 검증을 위해서는 더 디테일한 정규표현식 작성 필요
+          alert("잘못된 URL입니다!");
+          return;
+        }
+        var beforeURL = $(".inputArea").val();
+        console.log(beforeURL);
+        // qrcode.makeCode($(".inputArea").val());
+
+        axios.post('http://localhost/url', {
+          before: beforeURL
+        })
+        .then(function (res) {
+          console.log(res);
+          console.log(res.data.before);
+          $(".urlLink").attr("href", "http://localhost/" + res.data.after);
+          $(".urlLink").text("http://localhost/" + res.data.after);
+          qrcode.makeCode("http://localhost/" + res.data.after);
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+      });
+
+    </script>
+  </body>
+</html>

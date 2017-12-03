@@ -1,0 +1,111 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Nanum Square';
+}
+
+a {
+  text-decoration: none;
+}
+
+header {
+  width: 100vw;
+  height: 10vh;
+  background-color: rgb(255,137,59);
+  color: black;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+}
+
+.mainWrapper {
+  width: 100vw;
+  height: 90vh;
+  background-color: #f4f4f4;
+  /*display: flex;
+  justify-content: center;*/
+}
+
+.inputBox {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+}
+
+.inputWrapper {
+  width: 60vw;
+  height: 45px;
+  background-color: yellow;
+  /*margin-top: 2rem;*/
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+}
+
+.inputForm {
+  width: 100%;
+}
+
+.inputArea {
+  width: 100%;
+  height: 100%;
+  border: none;
+  font-size: 1.2rem;
+}
+
+.inputButton {
+  width: 60px;
+  background-color: rgb(255,137,59);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.resultWrapper {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+}
+
+.resultBox {
+  width: 60vw;
+  /*height: 100px;*/
+  background-color: white;
+  border-radius: 10px;
+  border: solid 1px #d2d2d2;
+}
+
+.none {
+  display: none;
+}
+
+
+.resultContent {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  font-size: 1.2rem;
+}
+
+.qrTitle {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.qrBox {
+  margin-top: 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
