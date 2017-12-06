@@ -36,3 +36,5 @@ AWS 클라우드 서버 배포 완료 : <a href="http://smile.heeham.com" target
 ![custom](./4.png)
 
 ![error3](./5.png)
+
+cf. BASE62
